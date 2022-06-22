@@ -1,5 +1,6 @@
 {
   "name": "nft-snoop",
+  "homepage": "https://os0xi.github.io/snoop_nfts/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
