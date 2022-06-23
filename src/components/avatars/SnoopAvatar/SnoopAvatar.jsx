@@ -7,14 +7,13 @@ function SnoopAvatar() {
     <Box
       position={'relative'}
       w="100%"
-      minW={'200px'}
       h="auto"
       display={'flex'}
       alignItems="flex-start"
       justifyContent={'center'}
     >
       {/* <Image src={star} bgColor="transparent" w="100%" /> */}
-      <Image src={snoopPicture} size="2xl" bgColor={'transparent'} />
+      <Image src={snoopPicture} bgColor={'transparent'} />
     </Box>
   );
 }

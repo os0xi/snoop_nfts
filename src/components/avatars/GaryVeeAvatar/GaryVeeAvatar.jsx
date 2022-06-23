@@ -7,7 +7,6 @@ function GaryVeeVatar() {
     <Box
       position={'relative'}
       w="100%"
-      minW={'200px'}
       h="auto"
       display={'flex'}
       alignItems="flex-start"

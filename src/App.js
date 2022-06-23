@@ -4,13 +4,25 @@ import { uid } from 'react-uid';
 import { useEffect, useState } from 'react';
 import { Box, IconButton, Button, Icon } from '@chakra-ui/react';
 import { SunIcon, MoonIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useColorMode, Text, Image } from '@chakra-ui/react';
+import {
+  useColorMode,
+  Text,
+  Image,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from '@chakra-ui/react';
 import SnoopAvatar from './components/avatars/SnoopAvatar/SnoopAvatar';
 import GaryVeeVatar from './components/avatars/GaryVeeAvatar/GaryVeeAvatar';
 //import nftData from './nft_data';
 function App() {
   const { colorMode, toggleColorMode } = useColorMode();
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [transactions, setTransactions] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -73,29 +85,48 @@ function App() {
         alignItems="flex-start"
         justifyContent={'center'}
       >
-        <Box
-          display={'flex'}
-          flexDirection={{ base: 'column', md: 'row' }}
-          mt={!currentPlayer ? 'auto' : 20}
-          mb="auto"
-          ml="auto"
-          mr="auto"
-          gap={{ base: 4, lg: 10 }}
-          h={!currentPlayer ? '100vh ' : '100%'}
-          alignItems={!currentPlayer ? 'center' : 'center'}
-          justifyContent={'center'}
-        >
-          <Box
-            w={currentPlayer === 'Snoop' ? '70%' : '30%'}
-            onClick={() => {
-              console.log('pressed change player to Snoop');
-              setCurrentPlayer('Snoop');
-              setLoaded(false);
-              setLoading(true);
-            }}
-          >
-            <SnoopAvatar />
-            {currentPlayer === 'Snoop' ? (
+        {/*HERE MODAL */}
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent w="100vw" h="100vh" position={'absolute'} top={'-60px'}>
+            <ModalCloseButton />
+            <ModalBody>
+              <Box
+                display={'flex'}
+                flexDirection={{ base: 'column', md: 'row' }}
+                mt={!currentPlayer ? 'auto' : '100px'}
+                mb="auto"
+                ml="auto"
+                mr="auto"
+                gap={{ base: 4, lg: 10 }}
+                h={!currentPlayer ? '100vh ' : '100%'}
+                alignItems="center"
+                justifyContent={'center'}
+              >
+                <Box
+                  order={currentPlayer === 'Snoop' ? 2 : 1}
+                  mt={currentPlayer === 'Snoop' ? { base: 20 } : 0}
+                  display={'flex'}
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems={'center'}
+                  w={
+                    currentPlayer
+                      ? currentPlayer === 'Snoop'
+                        ? '95%'
+                        : '20%'
+                      : '80%'
+                  }
+                  onClick={() => {
+                    console.log('pressed change player to Snoop');
+                    setCurrentPlayer('Snoop');
+
+                    setLoaded(false);
+                    setLoading(true);
+                  }}
+                >
+                  <SnoopAvatar />
+                  {/* {currentPlayer === 'Snoop' ? (
               <Box
                 w={'100%'}
                 display={'flex'}
@@ -113,19 +144,30 @@ function App() {
               </Box>
             ) : (
               <></>
-            )}
-          </Box>
-          <Box
-            w={currentPlayer === 'Gary' ? '70%' : '30%'}
-            onClick={() => {
-              console.log('pressed change player to Gary');
-              setCurrentPlayer('Gary');
-              setLoaded(false);
-              setLoading(true);
-            }}
-          >
-            <GaryVeeVatar />
-            {currentPlayer === 'Gary' ? (
+            )} */}
+                </Box>
+                <Box
+                  order={currentPlayer === 'Gary' ? 2 : 1}
+                  display={'flex'}
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems={'center'}
+                  w={
+                    currentPlayer
+                      ? currentPlayer === 'Gary'
+                        ? '80%'
+                        : '20%'
+                      : '70%'
+                  }
+                  onClick={() => {
+                    console.log('pressed change player to Gary');
+                    setCurrentPlayer('Gary');
+                    setLoaded(false);
+                    setLoading(true);
+                  }}
+                >
+                  <GaryVeeVatar />
+                  {/* {currentPlayer === 'Gary' ? (
               <Box w={'100%'} display={'flex'} justifyContent="center">
                 <Text
                   bgGradient="linear(to-l, #7928CA, #FF0080)"
@@ -138,40 +180,163 @@ function App() {
               </Box>
             ) : (
               <></>
-            )}
-          </Box>
-        </Box>
-        <Button
-          p={{ base: 2, xl: 20 }}
-          position={'absolute'}
-          zIndex={344}
+            )} */}
+                </Box>
+              </Box>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
+        <Box
+          display={currentPlayer ? 'flex' : 'none'}
+          flexDirection="column"
+          alignItems={'center'}
+          gap={5}
+          p={8}
+          borderRadius={20}
+          position={'fixed'}
+          left={4}
+          top={4}
+          zIndex={'344'}
           boxShadow="dark-lg"
-          onClick={() => {
-            setCurrentPlayer();
-          }}
-          display={currentPlayer ? 'block' : 'none'}
-          bgColor="transparent"
-          borderRadius={50}
-          left={10}
-          top={10}
-          icon={<ViewOffIcon />}
+          bg={colorMode === 'dark' ? 'blackAlpha.800' : 'whiteAlpha.900'}
         >
-          Hide NFTs
-        </Button>
+          <Button
+            colorScheme="blue"
+            ml={'auto'}
+            px={10}
+            onClick={() => {
+              setCurrentPlayer();
+              setLoaded(false);
+              setLoading(false);
+            }}
+            boxShadow="dark-lg"
+            borderRadius={50}
+            variant="solid"
+            icon={<ViewOffIcon />}
+          >
+            back
+          </Button>
+          <Text
+            bgGradient="linear(to-l, #7928CA,#FF0080)"
+            bgClip="text"
+            fontSize="md"
+            fontWeight="extrabold"
+          >
+            {currentPlayer}'s{' '}
+          </Text>
+          <Button onClick={onOpen} cursor="pointer" variant={'outline'}>
+            Select another player
+          </Button>
+        </Box>
         <IconButton
-          position={'absolute'}
+          position={'fixed'}
           zIndex={344}
           boxShadow="dark-lg"
           onClick={toggleColorMode}
           bgColor="transparent"
           borderRadius={50}
-          right={10}
-          top={10}
+          left={'30px'}
+          top={'47px'}
           icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
         ></IconButton>
+        {!currentPlayer && (
+          <Box
+            display={'flex'}
+            flexDirection={{ base: 'column', md: 'row' }}
+            mt={!currentPlayer ? 'auto' : '100px'}
+            mb="auto"
+            ml="auto"
+            mr="auto"
+            gap={{ base: 4, lg: 10 }}
+            h={!currentPlayer ? '100vh ' : '100%'}
+            alignItems="center"
+            justifyContent={'center'}
+          >
+            <Box
+              order={currentPlayer === 'Snoop' ? 2 : 1}
+              mt={currentPlayer === 'Snoop' ? { base: 20 } : 0}
+              display={'flex'}
+              flexDirection="column"
+              justifyContent="center"
+              alignItems={'center'}
+              w={
+                currentPlayer
+                  ? currentPlayer === 'Snoop'
+                    ? '95%'
+                    : '20%'
+                  : '80%'
+              }
+              onClick={() => {
+                console.log('pressed change player to Snoop');
+                setCurrentPlayer('Snoop');
+
+                setLoaded(false);
+                setLoading(true);
+              }}
+            >
+              <SnoopAvatar />
+              {/* {currentPlayer === 'Snoop' ? (
+              <Box
+                w={'100%'}
+                display={'flex'}
+                justifyContent="center"
+                alignItems={'center'}
+              >
+                <Text
+                  bgGradient="linear(to-l, #7928CA, #FF0080)"
+                  bgClip="text"
+                  fontSize={{ base: '4xl', md: '6xl' }}
+                  fontWeight="extrabold"
+                >
+                  Snoop Dogg
+                </Text>
+              </Box>
+            ) : (
+              <></>
+            )} */}
+            </Box>
+            <Box
+              order={currentPlayer === 'Gary' ? 2 : 1}
+              display={'flex'}
+              flexDirection="column"
+              justifyContent="center"
+              alignItems={'center'}
+              w={
+                currentPlayer
+                  ? currentPlayer === 'Gary'
+                    ? '80%'
+                    : '20%'
+                  : '70%'
+              }
+              onClick={() => {
+                console.log('pressed change player to Gary');
+                setCurrentPlayer('Gary');
+                setLoaded(false);
+                setLoading(true);
+              }}
+            >
+              <GaryVeeVatar />
+              {/* {currentPlayer === 'Gary' ? (
+              <Box w={'100%'} display={'flex'} justifyContent="center">
+                <Text
+                  bgGradient="linear(to-l, #7928CA, #FF0080)"
+                  bgClip="text"
+                  fontSize={{ base: '4xl', md: '6xl' }}
+                  fontWeight="extrabold"
+                >
+                  Gary Vee
+                </Text>
+              </Box>
+            ) : (
+              <></>
+            )} */}
+            </Box>
+          </Box>
+        )}
       </Box>
       {loading && !loaded && (
-        <Box>
+        <Box mt={20}>
           <Button
             w={'100%'}
             h={'40vh'}
@@ -188,9 +353,9 @@ function App() {
         <Box
           w={'100vw'}
           h={'100vh'}
-          mt={90}
+          mt={'300px'}
           mb={20}
-          p={5}
+          pt={20}
           display="flex"
           alignItems={'center'}
           justifyContent={'center'}
@@ -218,6 +383,7 @@ function App() {
                     bgColor="black"
                     w="100%"
                     p={0}
+                    borderRadius={'20px'}
                   >
                     <Text
                       fontWeight={'bold'}
