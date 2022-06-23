@@ -1,10 +1,12 @@
 {
   "files": {
-    "main.js": "/snoop_nfts/static/js/main.3380ef6a.js",
-    "static/js/922.76eec9d5.chunk.js": "/snoop_nfts/static/js/922.76eec9d5.chunk.js",
+    "main.js": "/snoop_nfts/static/js/main.ec2b9b34.js",
+    "static/js/922.aa6904fa.chunk.js": "/snoop_nfts/static/js/922.aa6904fa.chunk.js",
+    "static/media/garyvee1.png": "/snoop_nfts/static/media/garyvee1.27a75afbe527b75c855c.png",
+    "static/media/snoop4.png": "/snoop_nfts/static/media/snoop4.33be240b26cd9e3d347c.png",
     "index.html": "/snoop_nfts/index.html"
   },
   "entrypoints": [
-    "static/js/main.3380ef6a.js"
+    "static/js/main.ec2b9b34.js"
   ]
 }
