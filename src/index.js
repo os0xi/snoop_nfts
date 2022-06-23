@@ -2,16 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { extendTheme, ColorModeScript } from '@chakra-ui/react';
+import { ColorModeScript } from '@chakra-ui/react';
 import { ChakraProvider } from '@chakra-ui/react';
+import theme from './theme';
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
-const config = {
-  initialColorMode: 'dark',
-  useSystemColorMode: false,
-};
-
-const theme = extendTheme({ config });
 
 root.render(
   <React.StrictMode>
