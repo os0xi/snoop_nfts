@@ -34,8 +34,8 @@ function App() {
     let playersList = new Map();
 
     playersList
-      .set('Gary', '0x8f7cEeFaa1ff5DfD125106FF9e219efF360d57AA')
-      .set('Snoop', '0xCe90a7949bb78892F159F428D0dC23a8E3584d75');
+      .set('Gary Vee', '0x8f7cEeFaa1ff5DfD125106FF9e219efF360d57AA')
+      .set('Snoop Dogg', '0xCe90a7949bb78892F159F428D0dC23a8E3584d75');
     setPlayers(playersList);
   };
   const getNFTs = async () => {
@@ -78,55 +78,56 @@ function App() {
   return (
     <>
       <Box
-        w="100%"
         mt={'auto'}
         mb="auto"
         display={'flex'}
         alignItems="flex-start"
         justifyContent={'center'}
+        w="100vw"
       >
         {/*HERE MODAL */}
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} bgColor={'transparent'}>
           <ModalOverlay />
-          <ModalContent w="100vw" h="100vh" position={'absolute'} top={'-60px'}>
-            <ModalCloseButton />
-            <ModalBody>
-              <Box
-                display={'flex'}
-                flexDirection={{ base: 'column', md: 'row' }}
-                mt={!currentPlayer ? 'auto' : '100px'}
-                mb="auto"
-                ml="auto"
-                mr="auto"
-                gap={{ base: 4, lg: 10 }}
-                h={!currentPlayer ? '100vh ' : '100%'}
-                alignItems="center"
-                justifyContent={'center'}
-              >
-                <Box
-                  order={currentPlayer === 'Snoop' ? 2 : 1}
-                  mt={currentPlayer === 'Snoop' ? { base: 20 } : 0}
-                  display={'flex'}
-                  flexDirection="column"
-                  justifyContent="center"
-                  alignItems={'center'}
-                  w={
-                    currentPlayer
-                      ? currentPlayer === 'Snoop'
-                        ? '95%'
-                        : '20%'
-                      : '80%'
-                  }
-                  onClick={() => {
-                    console.log('pressed change player to Snoop');
-                    setCurrentPlayer('Snoop');
+          <ModalContent bgColor={'transparent'} boxShadow="none">
+            <Box
+              display={'flex'}
+              flexDirection={{ base: 'column', md: 'row' }}
+              mt={0}
+              mb="auto"
+              ml="auto"
+              mr="auto"
+              gap={{ base: 4, lg: 10 }}
+              h="100vh"
+              left={0}
+              alignItems="center"
+              justifyContent={'center'}
+            >
+              <Button onClick={onClose}>Back</Button>
 
-                    setLoaded(false);
-                    setLoading(true);
-                  }}
-                >
-                  <SnoopAvatar />
-                  {/* {currentPlayer === 'Snoop' ? (
+              <Box
+                order={currentPlayer === 'Snoop Dogg' ? 2 : 1}
+                mt={currentPlayer === 'Snoop Dogg' ? { base: 20 } : 0}
+                display={currentPlayer != 'Snoop Dogg' ? 'flex' : 'none'}
+                flexDirection="column"
+                justifyContent="center"
+                alignItems={'center'}
+                w={
+                  currentPlayer
+                    ? currentPlayer != 'Snoop Dogg'
+                      ? '95%'
+                      : '20%'
+                    : '80%'
+                }
+                onClick={() => {
+                  console.log('pressed change player to Snoop Dogg');
+                  setCurrentPlayer('Snoop Dogg');
+                  setLoaded(false);
+                  setLoading(true);
+                  onClose();
+                }}
+              >
+                <SnoopAvatar />
+                {/* {currentPlayer === 'Snoop Dogg' ? (
               <Box
                 w={'100%'}
                 display={'flex'}
@@ -145,29 +146,31 @@ function App() {
             ) : (
               <></>
             )} */}
-                </Box>
-                <Box
-                  order={currentPlayer === 'Gary' ? 2 : 1}
-                  display={'flex'}
-                  flexDirection="column"
-                  justifyContent="center"
-                  alignItems={'center'}
-                  w={
-                    currentPlayer
-                      ? currentPlayer === 'Gary'
-                        ? '80%'
-                        : '20%'
-                      : '70%'
-                  }
-                  onClick={() => {
-                    console.log('pressed change player to Gary');
-                    setCurrentPlayer('Gary');
-                    setLoaded(false);
-                    setLoading(true);
-                  }}
-                >
-                  <GaryVeeVatar />
-                  {/* {currentPlayer === 'Gary' ? (
+              </Box>
+
+              <Box
+                order={currentPlayer === 'Gary Vee' ? 2 : 1}
+                flexDirection="column"
+                justifyContent="center"
+                alignItems={'center'}
+                display={currentPlayer != 'Gary Vee' ? 'flex' : 'none'}
+                w={
+                  currentPlayer
+                    ? currentPlayer != 'Gary Vee'
+                      ? '80%'
+                      : '20%'
+                    : '70%'
+                }
+                onClick={() => {
+                  console.log('pressed change player to Gary');
+                  setCurrentPlayer('Gary Vee');
+                  onClose();
+                  setLoaded(false);
+                  setLoading(true);
+                }}
+              >
+                <GaryVeeVatar />
+                {/* {currentPlayer === 'Gary' ? (
               <Box w={'100%'} display={'flex'} justifyContent="center">
                 <Text
                   bgGradient="linear(to-l, #7928CA, #FF0080)"
@@ -181,9 +184,8 @@ function App() {
             ) : (
               <></>
             )} */}
-                </Box>
               </Box>
-            </ModalBody>
+            </Box>
           </ModalContent>
         </Modal>
 
@@ -220,10 +222,10 @@ function App() {
           <Text
             bgGradient="linear(to-l, #7928CA,#FF0080)"
             bgClip="text"
-            fontSize="md"
+            fontSize="2xl"
             fontWeight="extrabold"
           >
-            {currentPlayer}'s{' '}
+            {currentPlayer}
           </Text>
           <Button onClick={onOpen} cursor="pointer" variant={'outline'}>
             Select another player
@@ -254,29 +256,29 @@ function App() {
             justifyContent={'center'}
           >
             <Box
-              order={currentPlayer === 'Snoop' ? 2 : 1}
-              mt={currentPlayer === 'Snoop' ? { base: 20 } : 0}
+              order={currentPlayer === 'Snoop Dogg' ? 2 : 1}
+              mt={currentPlayer === 'Snoop Dogg' ? { base: 20 } : 0}
               display={'flex'}
               flexDirection="column"
               justifyContent="center"
               alignItems={'center'}
               w={
                 currentPlayer
-                  ? currentPlayer === 'Snoop'
+                  ? currentPlayer === 'Snoop Dogg'
                     ? '95%'
                     : '20%'
                   : '80%'
               }
               onClick={() => {
-                console.log('pressed change player to Snoop');
-                setCurrentPlayer('Snoop');
+                console.log('pressed change player to Snoop Dogg');
+                setCurrentPlayer('Snoop Dogg');
 
                 setLoaded(false);
                 setLoading(true);
               }}
             >
               <SnoopAvatar />
-              {/* {currentPlayer === 'Snoop' ? (
+              {/* {currentPlayer === 'Snoop Dogg' ? (
               <Box
                 w={'100%'}
                 display={'flex'}
@@ -297,21 +299,21 @@ function App() {
             )} */}
             </Box>
             <Box
-              order={currentPlayer === 'Gary' ? 2 : 1}
+              order={currentPlayer === 'Gary Vee' ? 2 : 1}
               display={'flex'}
               flexDirection="column"
               justifyContent="center"
               alignItems={'center'}
               w={
                 currentPlayer
-                  ? currentPlayer === 'Gary'
+                  ? currentPlayer === 'Gary Vee'
                     ? '80%'
                     : '20%'
                   : '70%'
               }
               onClick={() => {
-                console.log('pressed change player to Gary');
-                setCurrentPlayer('Gary');
+                console.log('pressed change player to Gary Vee');
+                setCurrentPlayer('Gary Vee');
                 setLoaded(false);
                 setLoading(true);
               }}
@@ -383,7 +385,6 @@ function App() {
                     bgColor="black"
                     w="100%"
                     p={0}
-                    borderRadius={'20px'}
                   >
                     <Text
                       fontWeight={'bold'}
