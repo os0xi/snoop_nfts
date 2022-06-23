@@ -30,7 +30,6 @@ function App() {
   const [players, setPlayers] = useState(new Map());
   const [currentPlayer, setCurrentPlayer] = useState();
   const initPlayers = () => {
-    console.log('players initialized');
     let playersList = new Map();
 
     playersList
@@ -40,8 +39,6 @@ function App() {
   };
   const getNFTs = async () => {
     if (currentPlayer) {
-      console.log('getting data for ', players.get(currentPlayer));
-
       const options = {
         method: 'GET',
         url: 'https://opensea13.p.rapidapi.com/events',
@@ -62,7 +59,6 @@ function App() {
         .then(function (response) {
           setTransactions(response.data.asset_events);
           setLoaded(true);
-          console.log('got data');
         })
         .catch(function (error) {
           console.error(error);
@@ -119,7 +115,6 @@ function App() {
                     : '80%'
                 }
                 onClick={() => {
-                  console.log('pressed change player to Snoop Dogg');
                   setCurrentPlayer('Snoop Dogg');
                   setLoaded(false);
                   setLoading(true);
@@ -162,7 +157,6 @@ function App() {
                     : '70%'
                 }
                 onClick={() => {
-                  console.log('pressed change player to Gary');
                   setCurrentPlayer('Gary Vee');
                   onClose();
                   setLoaded(false);
@@ -270,7 +264,6 @@ function App() {
                   : '80%'
               }
               onClick={() => {
-                console.log('pressed change player to Snoop Dogg');
                 setCurrentPlayer('Snoop Dogg');
 
                 setLoaded(false);
@@ -312,7 +305,6 @@ function App() {
                   : '70%'
               }
               onClick={() => {
-                console.log('pressed change player to Gary Vee');
                 setCurrentPlayer('Gary Vee');
                 setLoaded(false);
                 setLoading(true);
@@ -364,7 +356,6 @@ function App() {
           flexWrap={'wrap'}
           gap={20}
         >
-          {console.log(transactions)}
           {loaded &&
             transactions.map(transaction => {
               return (
