@@ -2,23 +2,19 @@ import React from 'react';
 import axios from 'axios';
 import { uid } from 'react-uid';
 import { useEffect, useState } from 'react';
-import { Box, IconButton, Button, Icon } from '@chakra-ui/react';
-import { SunIcon, MoonIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { Box, IconButton, Button } from '@chakra-ui/react';
+import { SunIcon, MoonIcon } from '@chakra-ui/icons';
 import {
   useColorMode,
   Text,
-  Image,
   useDisclosure,
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
 } from '@chakra-ui/react';
-import SnoopAvatar from './components/avatars/SnoopAvatar/SnoopAvatar';
-import GaryVeeVatar from './components/avatars/GaryVeeAvatar/GaryVeeAvatar';
+import playersList from './components/PlayersList/PlayersList';
+import TransactionBox from './components/TransactionBox/TransactionBox';
+import ListPlayerAvatarsSelect from './components/ListPlayerAvatarsSelect/ListPlayerAvatarsSelect';
 //import nftData from './nft_data';
 function App() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -27,48 +23,40 @@ function App() {
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [players, setPlayers] = useState(new Map());
   const [currentPlayer, setCurrentPlayer] = useState();
-  const initPlayers = () => {
-    let playersList = new Map();
-
-    playersList
-      .set('Gary Vee', '0x8f7cEeFaa1ff5DfD125106FF9e219efF360d57AA')
-      .set('Snoop Dogg', '0xCe90a7949bb78892F159F428D0dC23a8E3584d75');
-    setPlayers(playersList);
-  };
-  const getNFTs = async () => {
-    if (currentPlayer) {
-      const options = {
-        method: 'GET',
-        url: 'https://opensea13.p.rapidapi.com/events',
-        params: {
-          only_opensea: 'false',
-          account_address: players.get(currentPlayer),
-          event_type: 'successful',
-        },
-        headers: {
-          'X-RapidAPI-Key':
-            'b4027c1201mshccf348b888d8b68p1c7765jsn337dcddf9965',
-          'X-RapidAPI-Host': 'opensea13.p.rapidapi.com',
-        },
-      };
-
-      axios
-        .request(options)
-        .then(function (response) {
-          setTransactions(response.data.asset_events);
-          setLoaded(true);
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
-    }
-  };
 
   useEffect(() => {
-    getNFTs();
-    initPlayers();
+    const getNFTs = async player => {
+      // put NFTs data inside "transactions", and set loaded to true if successfull
+      if (currentPlayer) {
+        const options = {
+          method: 'GET',
+          url: 'https://opensea13.p.rapidapi.com/events',
+          params: {
+            only_opensea: 'false',
+            account_address: playersList.get(player).address,
+            event_type: 'successful',
+            //successful event means buy event. other event example:bid
+          },
+          headers: {
+            'X-RapidAPI-Key':
+              'b4027c1201mshccf348b888d8b68p1c7765jsn337dcddf9965',
+            'X-RapidAPI-Host': 'opensea13.p.rapidapi.com',
+          },
+        };
+
+        axios
+          .request(options)
+          .then(function (response) {
+            setTransactions(response.data.asset_events);
+            setLoaded(true);
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
+      }
+    };
+    getNFTs(currentPlayer);
   }, [currentPlayer]);
 
   return (
@@ -81,109 +69,36 @@ function App() {
         justifyContent={'center'}
         w="100vw"
       >
-        {/*HERE MODAL */}
-        <Modal isOpen={isOpen} onClose={onClose} bgColor={'transparent'}>
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          size="full"
+          //Modal player select, closes from child once we select another player or hit the back button
+        >
           <ModalOverlay />
-          <ModalContent bgColor={'transparent'} boxShadow="none">
-            <Box
-              display={'flex'}
-              flexDirection={{ base: 'column', md: 'row' }}
-              mt={0}
-              mb="auto"
-              ml="auto"
-              mr="auto"
-              gap={{ base: 4, lg: 10 }}
-              h="100vh"
-              left={0}
-              alignItems="center"
-              justifyContent={'center'}
-            >
-              <Button onClick={onClose}>Back</Button>
-
-              <Box
-                order={currentPlayer === 'Snoop Dogg' ? 2 : 1}
-                mt={currentPlayer === 'Snoop Dogg' ? { base: 20 } : 0}
-                display={currentPlayer != 'Snoop Dogg' ? 'flex' : 'none'}
-                flexDirection="column"
-                justifyContent="center"
-                alignItems={'center'}
-                w={
-                  currentPlayer
-                    ? currentPlayer != 'Snoop Dogg'
-                      ? '95%'
-                      : '20%'
-                    : '80%'
-                }
-                onClick={() => {
-                  setCurrentPlayer('Snoop Dogg');
-                  setLoaded(false);
-                  setLoading(true);
-                  onClose();
-                }}
-              >
-                <SnoopAvatar />
-                {/* {currentPlayer === 'Snoop Dogg' ? (
-              <Box
-                w={'100%'}
-                display={'flex'}
-                justifyContent="center"
-                alignItems={'center'}
-              >
-                <Text
-                  bgGradient="linear(to-l, #7928CA, #FF0080)"
-                  bgClip="text"
-                  fontSize={{ base: '4xl', md: '6xl' }}
-                  fontWeight="extrabold"
-                >
-                  Snoop Dogg
-                </Text>
-              </Box>
-            ) : (
-              <></>
-            )} */}
-              </Box>
-
-              <Box
-                order={currentPlayer === 'Gary Vee' ? 2 : 1}
-                flexDirection="column"
-                justifyContent="center"
-                alignItems={'center'}
-                display={currentPlayer != 'Gary Vee' ? 'flex' : 'none'}
-                w={
-                  currentPlayer
-                    ? currentPlayer != 'Gary Vee'
-                      ? '80%'
-                      : '20%'
-                    : '70%'
-                }
-                onClick={() => {
-                  setCurrentPlayer('Gary Vee');
-                  onClose();
-                  setLoaded(false);
-                  setLoading(true);
-                }}
-              >
-                <GaryVeeVatar />
-                {/* {currentPlayer === 'Gary' ? (
-              <Box w={'100%'} display={'flex'} justifyContent="center">
-                <Text
-                  bgGradient="linear(to-l, #7928CA, #FF0080)"
-                  bgClip="text"
-                  fontSize={{ base: '4xl', md: '6xl' }}
-                  fontWeight="extrabold"
-                >
-                  Gary Vee
-                </Text>
-              </Box>
-            ) : (
-              <></>
-            )} */}
-              </Box>
-            </Box>
+          <ModalContent
+            boxShadow="none"
+            position={'fixed'}
+            bgColor={'transparent'}
+          >
+            <ListPlayerAvatarsSelect
+              currentPlayer={currentPlayer}
+              setCurrentPlayer={p => {
+                setCurrentPlayer(p);
+              }}
+              setLoaded={p => {
+                setLoaded(p);
+              }}
+              onClose={onClose}
+              setLoading={p => {
+                setLoading(p);
+              }}
+            />
           </ModalContent>
         </Modal>
 
         <Box
+          //little menu, shown once we have a currentPlayer, hidden for none (except for theme selection icon)
           display={currentPlayer ? 'flex' : 'none'}
           flexDirection="column"
           alignItems={'center'}
@@ -197,7 +112,21 @@ function App() {
           boxShadow="dark-lg"
           bg={colorMode === 'dark' ? 'blackAlpha.800' : 'whiteAlpha.900'}
         >
+          <IconButton
+            //Theme Change Button
+            position={'fixed'}
+            zIndex={344}
+            boxShadow="dark-lg"
+            onClick={toggleColorMode}
+            bgColor="transparent"
+            borderRadius={50}
+            left={'30px'}
+            top={'47px'}
+            icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+          ></IconButton>
+
           <Button
+            //back button, sets currentPlayer to undefined, so player list is shown, and little menu hidden
             colorScheme="blue"
             ml={'auto'}
             px={10}
@@ -209,7 +138,6 @@ function App() {
             boxShadow="dark-lg"
             borderRadius={50}
             variant="solid"
-            icon={<ViewOffIcon />}
           >
             back
           </Button>
@@ -225,111 +153,28 @@ function App() {
             Select another player
           </Button>
         </Box>
-        <IconButton
-          position={'fixed'}
-          zIndex={344}
-          boxShadow="dark-lg"
-          onClick={toggleColorMode}
-          bgColor="transparent"
-          borderRadius={50}
-          left={'30px'}
-          top={'47px'}
-          icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-        ></IconButton>
-        {!currentPlayer && (
-          <Box
-            display={'flex'}
-            flexDirection={{ base: 'column', md: 'row' }}
-            mt={!currentPlayer ? 'auto' : '100px'}
-            mb="auto"
-            ml="auto"
-            mr="auto"
-            gap={{ base: 4, lg: 10 }}
-            h={!currentPlayer ? '100vh ' : '100%'}
-            alignItems="center"
-            justifyContent={'center'}
-          >
-            <Box
-              order={currentPlayer === 'Snoop Dogg' ? 2 : 1}
-              mt={currentPlayer === 'Snoop Dogg' ? { base: 20 } : 0}
-              display={'flex'}
-              flexDirection="column"
-              justifyContent="center"
-              alignItems={'center'}
-              w={
-                currentPlayer
-                  ? currentPlayer === 'Snoop Dogg'
-                    ? '95%'
-                    : '20%'
-                  : '80%'
-              }
-              onClick={() => {
-                setCurrentPlayer('Snoop Dogg');
 
-                setLoaded(false);
-                setLoading(true);
+        {!currentPlayer && (
+          //show player list unless we have a player already selected
+          <>
+            <ListPlayerAvatarsSelect
+              currentPlayer={undefined}
+              setCurrentPlayer={p => {
+                setCurrentPlayer(p);
               }}
-            >
-              <SnoopAvatar />
-              {/* {currentPlayer === 'Snoop Dogg' ? (
-              <Box
-                w={'100%'}
-                display={'flex'}
-                justifyContent="center"
-                alignItems={'center'}
-              >
-                <Text
-                  bgGradient="linear(to-l, #7928CA, #FF0080)"
-                  bgClip="text"
-                  fontSize={{ base: '4xl', md: '6xl' }}
-                  fontWeight="extrabold"
-                >
-                  Snoop Dogg
-                </Text>
-              </Box>
-            ) : (
-              <></>
-            )} */}
-            </Box>
-            <Box
-              order={currentPlayer === 'Gary Vee' ? 2 : 1}
-              display={'flex'}
-              flexDirection="column"
-              justifyContent="center"
-              alignItems={'center'}
-              w={
-                currentPlayer
-                  ? currentPlayer === 'Gary Vee'
-                    ? '80%'
-                    : '20%'
-                  : '70%'
-              }
-              onClick={() => {
-                setCurrentPlayer('Gary Vee');
-                setLoaded(false);
-                setLoading(true);
+              setLoaded={p => {
+                setLoaded(p);
               }}
-            >
-              <GaryVeeVatar />
-              {/* {currentPlayer === 'Gary' ? (
-              <Box w={'100%'} display={'flex'} justifyContent="center">
-                <Text
-                  bgGradient="linear(to-l, #7928CA, #FF0080)"
-                  bgClip="text"
-                  fontSize={{ base: '4xl', md: '6xl' }}
-                  fontWeight="extrabold"
-                >
-                  Gary Vee
-                </Text>
-              </Box>
-            ) : (
-              <></>
-            )} */}
-            </Box>
-          </Box>
+              setLoading={p => {
+                setLoading(p);
+              }}
+            />
+          </>
         )}
       </Box>
+
       {loading && !loaded && (
+        //if we are loading, show loading screen
         <Box mt={20}>
           <Button
             w={'100%'}
@@ -343,7 +188,9 @@ function App() {
           </Button>
         </Box>
       )}
+
       {loaded && (
+        // if we have NFT data, list it
         <Box
           w={'100vw'}
           h={'100vh'}
@@ -359,80 +206,12 @@ function App() {
           {loaded &&
             transactions.map(transaction => {
               return (
-                <Box
+                <TransactionBox
+                  transaction={transaction}
                   key={uid(transaction)}
-                  boxShadow="dark-lg"
-                  h="250px"
-                  w="250px"
-                  display={'flex'}
-                  justifyContent="center"
-                  alignItems={'center'}
-                  position="relative"
-                >
-                  <Box
-                    position="absolute"
-                    bottom={-6}
-                    left={0}
-                    bgColor="black"
-                    w="100%"
-                    p={0}
-                  >
-                    <Text
-                      fontWeight={'bold'}
-                      bgGradient="linear(to-l, #7928CA,#FF0080)"
-                      bgClip="text"
-                      fontSize={'14px'}
-                      p={1}
-                    >
-                      {transaction.asset.collection.name}
-                    </Text>
-                  </Box>
-                  <Image
-                    h="250px"
-                    w="250px"
-                    src={transaction.asset.image_preview_url}
-                  />
-                  <Box
-                    position="absolute"
-                    bottom={0}
-                    left={0}
-                    bgColor="black"
-                    p={1}
-                    w={'100%'}
-                  >
-                    <Text
-                      fontWeight={'bold'}
-                      bgGradient="linear(to-l, #7928CA,#FF0080)"
-                      bgClip="text"
-                      fontSize={'14px'}
-                    >
-                      {transaction.total_price / 1000000000000000000}
-                      {' ETH // $'}
-                      {(
-                        (transaction.payment_token.usd_price *
-                          transaction.total_price) /
-                        1000000000000000000
-                      ).toFixed(0)}
-                    </Text>
-                  </Box>
-                  <Box
-                    position="absolute"
-                    top={0}
-                    right={0}
-                    bgColor="black"
-                    p={1}
-                  >
-                    <Text
-                      fontWeight={'bold'}
-                      bgGradient="linear(to-l, #7928CA,#FF0080)"
-                      bgClip="text"
-                      fontSize={'14px'}
-                    >
-                      {transaction.event_timestamp.slice(0, 10)}
-                    </Text>
-                  </Box>
-                </Box>
+                />
               );
+              //a box displaying transaction data
             })}
         </Box>
       )}
