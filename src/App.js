@@ -61,7 +61,64 @@ function App() {
 
   return (
     <>
+      <IconButton
+        //Theme Change Button
+        position={'fixed'}
+        zIndex={344}
+        boxShadow="dark-lg"
+        onClick={toggleColorMode}
+        bgColor="transparent"
+        borderRadius={50}
+        left={'30px'}
+        top={'47px'}
+        icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+      ></IconButton>
       <Box
+        //little menu, shown once we have a currentPlayer, hidden for none (except for theme selection icon)
+        display={currentPlayer ? 'flex' : 'none'}
+        flexDirection="column"
+        alignItems={'center'}
+        gap={5}
+        p={8}
+        borderRadius={20}
+        position={'fixed'}
+        left={4}
+        top={4}
+        zIndex={'344'}
+        boxShadow="dark-lg"
+        bg={colorMode === 'dark' ? 'blackAlpha.800' : 'whiteAlpha.900'}
+      >
+        <Button
+          //back button, sets currentPlayer to undefined, so player list is shown, and little menu hidden
+          colorScheme="blue"
+          ml={'auto'}
+          px={10}
+          onClick={() => {
+            setCurrentPlayer();
+            setLoaded(false);
+            setLoading(false);
+          }}
+          boxShadow="dark-lg"
+          borderRadius={50}
+          variant="solid"
+        >
+          back
+        </Button>
+        <Text
+          bgGradient="linear(to-l, #7928CA,#FF0080)"
+          bgClip="text"
+          fontSize="2xl"
+          fontWeight="extrabold"
+        >
+          {currentPlayer}
+        </Text>
+        <Button onClick={onOpen} cursor="pointer" variant={'outline'}>
+          Select another player
+        </Button>
+      </Box>
+
+      <Box
+        //Big menu: player select; Modal if we have currentPlayer, full page if we don't
         mt={'auto'}
         mb="auto"
         display={'flex'}
@@ -97,63 +154,6 @@ function App() {
           </ModalContent>
         </Modal>
 
-        <Box
-          //little menu, shown once we have a currentPlayer, hidden for none (except for theme selection icon)
-          display={currentPlayer ? 'flex' : 'none'}
-          flexDirection="column"
-          alignItems={'center'}
-          gap={5}
-          p={8}
-          borderRadius={20}
-          position={'fixed'}
-          left={4}
-          top={4}
-          zIndex={'344'}
-          boxShadow="dark-lg"
-          bg={colorMode === 'dark' ? 'blackAlpha.800' : 'whiteAlpha.900'}
-        >
-          <IconButton
-            //Theme Change Button
-            position={'fixed'}
-            zIndex={344}
-            boxShadow="dark-lg"
-            onClick={toggleColorMode}
-            bgColor="transparent"
-            borderRadius={50}
-            left={'30px'}
-            top={'47px'}
-            icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-          ></IconButton>
-
-          <Button
-            //back button, sets currentPlayer to undefined, so player list is shown, and little menu hidden
-            colorScheme="blue"
-            ml={'auto'}
-            px={10}
-            onClick={() => {
-              setCurrentPlayer();
-              setLoaded(false);
-              setLoading(false);
-            }}
-            boxShadow="dark-lg"
-            borderRadius={50}
-            variant="solid"
-          >
-            back
-          </Button>
-          <Text
-            bgGradient="linear(to-l, #7928CA,#FF0080)"
-            bgClip="text"
-            fontSize="2xl"
-            fontWeight="extrabold"
-          >
-            {currentPlayer}
-          </Text>
-          <Button onClick={onOpen} cursor="pointer" variant={'outline'}>
-            Select another player
-          </Button>
-        </Box>
-
         {!currentPlayer && (
           //show player list unless we have a player already selected
           <>
@@ -174,7 +174,7 @@ function App() {
       </Box>
 
       {loading && !loaded && (
-        //if we are loading, show loading screen
+        //shown while we are loading NFTs from a player
         <Box mt={20}>
           <Button
             w={'100%'}
@@ -190,7 +190,7 @@ function App() {
       )}
 
       {loaded && (
-        // if we have NFT data, list it
+        // once we have NFT data, list it by mapping
         <Box
           w={'100vw'}
           h={'100vh'}

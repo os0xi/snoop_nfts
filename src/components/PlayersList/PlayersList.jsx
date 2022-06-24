@@ -13,5 +13,33 @@ const playersList = new Map([
       picture: 'snoop4.png',
     },
   ],
+  [
+    'Snoop Dogg 2',
+    {
+      address: '0xCe90a7949bb78892F159F428D0dC23a8E3584d75',
+      picture: 'snoop3.webp',
+    },
+  ],
+  [
+    'Snoop Dogg 2',
+    {
+      address: '0xCe90a7949bb78892F159F428D0dC23a8E3584d75',
+      picture: 'snoop3.webp',
+    },
+  ],
+  [
+    'Snoop Dogg 3',
+    {
+      address: '0xCe90a7949bb78892F159F428D0dC23a8E3584d75',
+      picture: 'snoop3.webp',
+    },
+  ],
+  [
+    'Snoop Dogg 5',
+    {
+      address: '0xCe90a7949bb78892F159F428D0dC23a8E3584d75',
+      picture: 'snoop3.webp',
+    },
+  ],
 ]);
 export default playersList;
